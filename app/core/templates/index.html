@@ -1,67 +1,134 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Unofficial Discord Lookup</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static "css/index.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
+
+<body class="d-flex flex-column">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h3 class="text-center">
-                    Unofficial Discord Lookup.
-                </h3>
+                <h3 class="text-center">Unofficial Discord Lookup.</h3>
                 <hr>
                 <hr>
             </div>
         </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form role="form" method="Post">
-                            <div class="form-group">
-                                
-                                <label for="exampleInputEmail1">
-                                    Introduce steamID, steamID3, steamID64, customURL o URL completa.
-                                </label>
-                                {% csrf_token %}
-                                {{form.buscador}}
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" /> Confirmar
-                                </label>
-                            </div> 
-                            <button type="submit" class="btn btn-primary">
-                                Buscar
-                            </button>
-                        </form>
-                    
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="notificacion">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <form role="form" method="Post" id="discordForm">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Introduce steamID, steamID3, steamID64, customURL o URL completa.</label>
+                            {% csrf_token %}
+                            {{ form.buscador }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+
+                    {% if avatar %}
+                    <div id="formResults">
+                        <div class="mt-4"><img src="{{ avatar }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 150px;"></div>
+                        <table class="table table-bordered mt-3">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Nombre de Steam:</strong></td>
+                                    <td>{{ nombre }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ nombre }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SteamID:</strong></td>
+                                    <td>{{ steamid }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ steamid }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SteamID64:</strong></td>
+                                    <td>{{ steamid64 }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ steamid64 }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SteamID3:</strong></td>
+                                    <td>{{ steamid3 }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ steamid3 }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Nombre real:</strong></td>
+                                    <td>{{ realname }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ realname }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fecha de Creación de la cuenta:</strong></td>
+                                    <td>{{ time }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ time }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Localización:</strong></td>
+                                    <td>{{ pais }}</td>
+                                    <td><button class="btn btn-secondary btn-copy" onclick="copyToClipboard('{{ pais }}')"><i class="fas fa-copy"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-md-6">
-                        <form role="form" method="Post">
-                            <div class="form-group">
-                                
-                                <label for="exampleInputEmail1">
-                                    User ID / Any ID
-                                </label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" />
-                            </div>
-                            <div class="checkbox">
-                                
-                                <label>
-                                    <input type="checkbox" /> Confirmar
-                                </label>
-                            </div> 
-                            <button type="submit" class="btn btn-primary">
-                                Buscar
-                            </button>
-                        </form>
-                    </div>
+                    {% endif %}
                 </div>
-            </div>    
+                <!-- Resto del código... -->
+            </div>
+        </div>
     </div>
+
+    <!-- Sticky Footer -->
+    <footer class="footer mt-auto">
+        <div class="container footer-content">
+            <span class="text-muted">Gladoncio &nbsp;|&nbsp;<a href="https://portafolio.sofiawisdom.cl" target="_blank">Portafolio</a></span>
+        </div>
+    </footer>
+    <!-- End Sticky Footer -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/HzVZUo7j9K4yoNfMktB8V/DKXpqx6WBQ5EW2o2lQ"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"
+        integrity="sha384-alpB0O7xjBp7PWh9sXnx5RfZXE2AKXA05fRlFoPrfDkPmvPQkhMy9l8AsCiQgJYQ"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Vkoo8x4y3Ym/N+nM1B01tPu6qAihVfTGGt9pefOZs9KlZyjOp+MfAr1M34d6zMQe"
+        crossorigin="anonymous"></script>
+    <script>
+        // Función para copiar el contenido al portapapeles
+        function copyToClipboard(content) {
+            // Creamos un elemento textarea temporal para copiar el contenido
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = content;
+
+            // Añadimos el textarea al DOM y lo seleccionamos
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            // Ejecutamos el comando de copiar al portapapeles
+            document.execCommand('copy');
+
+            // Eliminamos el textarea temporal
+            document.body.removeChild(tempTextArea);
+
+            // Mostramos un mensaje de confirmación
+            alert('El contenido se ha copiado al portapapeles.');
+        }
+    </script>
 </body>
+
 </html>
