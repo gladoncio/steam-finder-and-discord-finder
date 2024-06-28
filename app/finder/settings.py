@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'api',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+STEAM_TOKEN = os.environ.get('STEAM_TOKEN')
+DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 
 ROOT_URLCONF = 'finder.urls'
 
